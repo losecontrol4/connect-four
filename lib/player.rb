@@ -1,4 +1,4 @@
-# Player class, contains infomation like player name and their token
+# Player class, contains infomation like player name, their token, and their current score
 
 class Player
   attr_reader :name, :score, :token
@@ -14,7 +14,7 @@ class Player
     @score += 1
   end
 
-  def get_move(_board)
+  def get_move(board)
     # returns a valid move
     puts "#{@name}, what's your move? (You are currently #{@token})"
     input_valid = false
@@ -22,6 +22,10 @@ class Player
       input = gets.chomp
       if input.length != 1 || !(input.to_i > 0 && input.to_i < 8)
         puts "#{@name}, please enter a valid number, 1 through 7"
+        next # jumps to the top of the while loop
+      end
+      if (board[0][input.to_i - 1] != "-")
+        puts "#{@name}, please choose a column that isn't full"
         next # jumps to the top of the while loop
       end
       input = input.to_i
@@ -40,6 +44,6 @@ class Player
   private
 
   def get_valid_token
-    '0'
+    @name
   end
 end
