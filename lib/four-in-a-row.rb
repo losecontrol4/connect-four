@@ -1,11 +1,12 @@
 class FourInARow
-  
+  #the FourInARow class provides all the tools needed play a single 
+  #two player game of four in a row (or connect four). After providing two player objects,
+  #calling the play function handles everything.
+
   def initialize(player1, player2)
     @p1 = player1
     @p2 = player2
     @board = Array.new(6) { Array.new(7, '-') }
-    # to be able to grab a column easily, I'm conceptually flipping the rows and columns so I can use row major order
-
     @turns = 0
     @last_move_cords = nil
     @game_over = false
@@ -16,22 +17,28 @@ class FourInARow
     @board.map(&:clone) # prevents it from being written to accidently
   end
 
-  def play
-    play_four_in_a_row
-    @winner.increment_score unless @winner.nil?
+  def play 
+    # where everything happens, returns a the winner (if there is one) and increment their score
+    play_four_in_a_row #plays a round of four in a row
+    @winner.increment_score unless @winner.nil? 
     ending_message(@winner)
+    @winner
   end
 
+  private 
+  
   def play_four_in_a_row
+    # this function controls the flow for a single game
     introduction
     until @game_over
+      #player1 turn
       puts self
       update_board(@p1)
       @turns += 1
       check_if_game_won(@p1)
     #---------------------
       next if @game_over
-
+     # player2 turn
       puts self
       update_board(@p2)
       @turns += 1
@@ -40,7 +47,7 @@ class FourInARow
   end
 
   def introduction
-    puts "Blah blah blah introduction #{@p1.name} and #{@p2.name}"
+    puts "Welcome to Four in a Row! The object of the game is to make your pieces to connect four times in a row, horizontaly, vertically, or diagonoly."
   end
 
   def ending_message(player)
@@ -80,8 +87,7 @@ class FourInARow
   end
 
   def check_if_game_won_helper(curr_cords, count, player, row_direction, col_direction)
-    p [count, 'here']
-    #follows a path recursively to see if the player connected four
+    #follows a path recursively to see if the player connected four tokens in a row
     if count == 3
       @game_over = true
       @winner = player
@@ -109,6 +115,8 @@ class FourInARow
   end
 
   def to_s
+    #                    
+    #    1 2 3 4 5 6 7
     # ___________________
     #  | - - - - - - - |
     #  | - - - - - - - |
@@ -117,7 +125,7 @@ class FourInARow
     #  | - - - - - - - |
     #  | - - - - - - - |
     # –––             –––
-    result = ' ___________________'
+    result = "\n    1 2 3 4 5 6 7\n ___________________"
     @board.each do |row|
         line = '  | '
         row.each {|column| line += "#{column} " }

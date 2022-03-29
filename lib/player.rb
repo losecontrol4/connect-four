@@ -1,13 +1,12 @@
 # Player class, contains infomation like player name, their token, and their current score
 
 class Player
-  attr_reader :name, :score, :token
-
-  @@token_list = ['x']
+  attr_reader :name, :score, :token 
+	"⚪ ⚫ ⚾ ⛄ ☺ ☹ ⚰ ☮ ☆ ★ ⛑ ♈ ⚽"
   def initialize(name)
     @name = name
     @score = 0
-    @token = get_valid_token
+    set_valid_token
   end
 
   def increment_score
@@ -41,9 +40,30 @@ class Player
     input
   end
 
-  private
+  def set_valid_token
+    valid_options = %w(☺ ☹ ☮ ☆ ★ ⛑ x ♥ o ∆ π)
+    selectors = %w(0 1 2 3 4 5 6 7 8 9 q)
 
-  def get_valid_token
-    @name
+
+    puts "#{@name}, choose your token!"
+    puts valid_options.join(" ")
+    puts selectors.join(" ")
+    input_valid = false
+    until input_valid
+      input = gets.chomp
+      if input.length != 1
+        puts "#{@name}, please enter a value with only one character"
+        next # jumps to the top of the while loop
+      end
+      if !selectors.include?(input)
+        puts "#{@name}, please choose an option presented to you"
+        next # jumps to the top of the while loop
+      end
+
+      input_valid = true
+      input == 'q' ? input_val = 10 : input_val = input.to_i
+    end
+    @token = valid_options[input_val]
+    puts "you chose #{@token}"
   end
 end
