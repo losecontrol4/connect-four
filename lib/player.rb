@@ -2,7 +2,6 @@
 
 class Player
   attr_reader :name, :score, :token 
-	"⚪ ⚫ ⚾ ⛄ ☺ ☹ ⚰ ☮ ☆ ★ ⛑ ♈ ⚽"
   def initialize(name)
     @name = name
     @score = 0
@@ -41,8 +40,8 @@ class Player
   end
 
   def set_valid_token
-    valid_options = %w(☺ ☹ ☮ ☆ ★ ⛑ x ♥ o ∆ π)
-    selectors = %w(0 1 2 3 4 5 6 7 8 9 q)
+    valid_options = %w(☺ ♘ ☆ ★ ⛑ x ♥ o ∆ π)
+    selectors = %w(1 2 3 4 5 6 7 8 9 q)
 
 
     puts "#{@name}, choose your token!"
@@ -61,7 +60,7 @@ class Player
       end
 
       input_valid = true
-      input == 'q' ? input_val = 10 : input_val = input.to_i
+      input == 'q' ? input_val = 9 : input_val = input.to_i - 1
     end
     @token = valid_options[input_val]
     puts "you chose #{@token}"
