@@ -62,44 +62,51 @@ class FourInARow
   end
 
   def check_if_game_won(player)
+    # checks if the last move was a winning move by checking a three by three grid around the move, and follows each path recurisvely if it has a match.
 
-    return unless @turns > 6
-    if @turns >= 42
+    return unless @turns > 6 # can't win in under 6 turns
+    if @turns >= 42 # this means the whole 6 by 7 board is full
       @game_over = true
       return
     end
 
     curr_cords = @last_move_cords
 
-    Array(-1..1).each do |i|
+    Array(-1..1).each do |i| # our three by three grid checking
       row = i + curr_cords[0]
       next if row < 0 || row > 6 - 1
       Array(-1..1).each do |j|
-        next if i == 0 && j == 0 #exclude checking self
+        next if i == 0 && j == 0 # exclude checking self
         col = j + curr_cords[1]
         next if col < 0 || col > 7 - 1
 
-        return if @game_over
-
-        check_if_game_won_helper([row, col], 1, player, i, j) if @board[row][col] == player.token
+        if @board[row][col] == player.token
+          count = check_if_game_won_helper([row, col], 2, player, i, j) + check_if_game_won_helper([(row - i), (col - j)], 0, player, -1 * i, -1 * j)
+          #checks the current path plus the inverse path to find if there is four in a row
+          
+          if count >= 4
+            @game_over = true
+            @winner = player
+            return
+          end
+        end
       end
     end
   end
 
   def check_if_game_won_helper(curr_cords, count, player, row_direction, col_direction)
-    #follows a path recursively to see if the player connected four tokens in a row
-    if count == 3
-      @game_over = true
-      @winner = player
-      return
-    end
+    #follows a path recursively and returns how many of the same token appear in a row
 
     row = row_direction + curr_cords[0]
     col = col_direction + curr_cords[1]
 
-    return if (row < 0 || row > 6 - 1) || (col < 0 || col > 7 - 1) #out of bounds
+    return count if (row < 0 || row > 6 - 1) || (col < 0 || col > 7 - 1) #out of bounds
 
-    check_if_game_won_helper([row, col], count + 1, player, row_direction, col_direction) if @board[row][col] == player.token
+    if @board[row][col] == player.token
+      check_if_game_won_helper([row, col], count + 1, player, row_direction, col_direction) 
+    else
+      return count
+    end
   end
   
    
@@ -136,5 +143,4 @@ class FourInARow
     result
   end
 end
-
 
